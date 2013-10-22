@@ -32,9 +32,9 @@ class JsonParserException(Exception):
 class Tokenizer(object):
 
     def __init__(self, stream, encoding='utf-8'):
-        self.skipblanks = True
         self.content = charsGenerator(stream, encoding)
         self.current = None
+        self.in_string = False
 
     def assertValues(self, values):
         if self.current is None or self.current not in values:
@@ -48,9 +48,7 @@ class Tokenizer(object):
     def next(self):
         for c in self.content:
             self.current = c
-            if self.current == u'"':
-                self.skipblanks = not self.skipblanks
-            if self.skipblanks and self.current.isspace():
+            if not self.in_string and self.current.isspace():
                 return self.next()
             return self.current
         self.current = None
@@ -115,6 +113,7 @@ class JsonParser(object):
 
     def parseString(self):
         ret = u''
+        self.tokenizer.in_string = True
         self.tokenizer.assertValues(u'"')
         while True:
             self.tokenizer.next()
@@ -152,6 +151,7 @@ class JsonParser(object):
             else:
                 raise JsonParserException(u'Wrong character in string')
         self.tokenizer.assertValues(u'"')
+        self.tokenizer.in_string = False
         self.tokenizer.next()
         return ret
 
