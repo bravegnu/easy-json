@@ -37,7 +37,7 @@ class Tokenizer(object):
         self.current = None
 
     def assertValues(self, values):
-        if self.current not in values:
+        if self.current is None or self.current not in values:
             raise JsonParserException(u'%s not in %s' % (self.current,
                     values))
 
