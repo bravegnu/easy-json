@@ -226,7 +226,10 @@ class JsonParser(object):
             while self.tokenizer.next().isdigit():
                 ret *= 10
                 ret += int(self.tokenizer.current)
-        assert not self.tokenizer.current.isdigit()
+
+        if self.tokenizer.current.isdigit():
+            raise JsonParserException("Wrong character in number")
+
         if self.tokenizer.current == u'.':
             self.tokenizer.next()
             self.tokenizer.assertValues(u'0123456789')
