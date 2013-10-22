@@ -309,6 +309,8 @@ class JsonVisitor(object):
             return self.dumpString(pyJson)
         if isinstance(pyJson, decimal.Decimal):
             return self.dumpNumber(pyJson)
+        if isinstance(pyJson, bool):
+            return pyJson and u'true' or u'false'
         if isinstance(pyJson, int):
             return self.dumpNumber(pyJson)
         if isinstance(pyJson, float):
@@ -317,8 +319,6 @@ class JsonVisitor(object):
             return self.dumpDict(pyJson)
         if isinstance(pyJson, list):
             return self.dumpList(pyJson)
-        if isinstance(pyJson, bool):
-            return pyJson and u'true' or u'false'
         if pyJson is None:
             return u'null'
         raise JsonParserException('Wrong Python argument')
