@@ -12,7 +12,7 @@ Luca Bacchi <bacchilu@gmail.com> - http://www.lucabacchi.it
 """
 
 import decimal
-
+import string
 
 def charsGenerator(stream, encoding):
     '''
@@ -303,7 +303,10 @@ class JsonVisitor(object):
             try:
                 resultString += charDict[c]
             except KeyError:
-                resultString += c
+                if c in string.printable:
+                    resultString += c
+                else:
+                    resultString += u"\\u%04x" % ord(c)
         resultString += u'"'
         return resultString
 
